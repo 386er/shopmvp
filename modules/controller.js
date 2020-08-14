@@ -7,24 +7,28 @@ function Controller() {
 
 	that.initialize = function() {
 	
-		that.body = $("#shirt-section");
-		
+		that.body = $("#middle-column");
+
 
 	
 	}  
 
 		
 	that.render = function() {
-		
+
+        that.unbindAll();
+        that.body.empty();
+
+
+		that.body.append(bodyTemplate);
 		$("#greetings").append(greetingsTemplate);
-		$("#selector-wrapper").append(categories);
-		$("#choose-image").append(choose);
+		$("#selector-wrapper").append(categoriesTemplate);
+		$("#choose-image").append(chooseTemplate);
 		
 		that.bindTrashButton();
 		that.bindChooseButton();
 		that.bindSelectButton();
-		
-		
+
 	}
 	
 	that.startLoading = function() {
@@ -39,7 +43,16 @@ function Controller() {
 		that.isLoading = false;
 		
 	}
-	
+
+
+	that.unbindAll = function() {
+
+	    $( ".trash" ).off();
+	    $( ".choose" ).off();
+	    $( ".selector" ).off();
+	    $('#back').off();
+
+	}
 	
 	that.bindTrashButton = function() {
 		
@@ -55,21 +68,29 @@ function Controller() {
 		
 		$( ".choose" ).click(function() {
 
-			var shirtSVG = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="tshirt" class="svg-inline--fa fa-tshirt fa-w-20" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path fill="currentColor" d="M631.2 96.5L436.5 0C416.4 27.8 371.9 47.2 320 47.2S223.6 27.8 203.5 0L8.8 96.5c-7.9 4-11.1 13.6-7.2 21.5l57.2 114.5c4 7.9 13.6 11.1 21.5 7.2l56.6-27.7c10.6-5.2 23 2.5 23 14.4V480c0 17.7 14.3 32 32 32h256c17.7 0 32-14.3 32-32V226.3c0-11.8 12.4-19.6 23-14.4l56.6 27.7c7.9 4 17.5.8 21.5-7.2L638.3 118c4-7.9.8-17.6-7.1-21.5z"></path></svg>'
+            var selectedSVG = $("#image-section").find(".svg-icon");
 
 			$( ".selector-image" ).empty()
 			$( ".selector" ).empty()
 			$( "#greetings").empty()
 			
 			$("#image-section").empty().append('<div class="loader"></div>', '<div id="loader-text"> Loading Selection </br> (Fancy Animation)</div>' );
-			
+
+
 			
 			setTimeout(function() {
 
-					var styles = {"width": "23.5em", "height": "23.5em", "margin-left":"0px", "margin-top":"0px"};
+
+                   that.body.empty().append(shirtTemplate)
+                   console.log(selectedSVG)
+                   that.addSingleImage(selectedSVG)
 
 
-					$("#shirt-section").empty().append(shirtSVG).append('<div id="choose-image"></div>');
+					$('#back').click(function() {
+
+					    that.render();
+
+					})
 					
 			},1200);
 		})
@@ -82,8 +103,11 @@ function Controller() {
 		$( ".selector" ).click(function() {
 			var selectedImageSVG = $(this).html()
 			if (that.isLoading == false) {
-				$("#image-section").empty().append('<div class="loader"></div>', '<div id="loader-text"> Generating Image </br> (Fancy Animation)</div>' );
 
+
+
+				$("#image-section").empty().append('<div class="loader"></div>', '<div id="loader-text"> Generating Image </br> (Fancy Animation)</div>' );
+                $(".selector-image").css("display","none")
 				that.startLoading();
 		
 				setTimeout(function() {
@@ -103,6 +127,31 @@ function Controller() {
 		});
 		
 	}
+
+
+	that.addSingleImage = function(svg) {
+
+        var styles = {"position": "absolute", "width": "5em", "height": "5em", "top":"25%", "left":"45%", "fill":"black important", "z-index":"10000"};
+	    //$('.single').append('<div id="singleShirt">' + svg + "</div>");
+	    $('#single').append(svg[0]);
+	    console.log(svg[0])
+	    $('#single').find(".svg-icon").css(styles);
+
+        var styles2 = {"fill": "white"}
+        $('#single').find("path.svg-icon").css(styles2)
+        $('#single').find("polygon.svg-icon").css(styles2)
+        $('#single').find("rect.svg-icon").css(styles2)
+
+
+        //.svg-icon circle {stroke: white;stroke-width: 1;}
+
+
+
+
+
+	}
+
+
 	
 	return that;
 
