@@ -2,6 +2,7 @@ function Controller() {
 
 	var that = {};
 
+    that.selectedImageSVG = "";
 	that.body = "";
 	that.isLoading = false;
 
@@ -45,14 +46,14 @@ function Controller() {
 	    $( ".choose" ).off();
 	    $( ".selector" ).off();
 	    $('#back').off();
+	    $(".shirt-wrapper").off();
 	}
 	
 	that.bindTrashButton = function() {
 		
 		$( ".trash" ).click(function() {
 
-			$("#image-section").empty();
-			$(".selector-image").css("display","none");
+            that.loadImage();
 
 		});
 	}
@@ -62,33 +63,13 @@ function Controller() {
 		
 		$( ".selector" ).click(function() {
 			
-			var selectedImageSVG = $(this).html()
+			that.selectedImageSVG = $(this).html()
 			
-			if (that.isLoading == false) {
-
-				that.getLoader("Generating Image");
-				
-				$(".selector-image").css("display","none")
-				that.startLoading();
+            that.loadImage();
 		
-				setTimeout(function() {
+	    })
 
-					var styles = {"width": "23.5em", "height": "23.5em", "margin-left":"0px", "margin-top":"0px"};
-
-
-					$("#image-section").empty().append(selectedImageSVG);
-					$("#image-section").find(".svg-icon").css(styles);
-					that.stopLoading();
-					
-
-					$(".selector-image").css("display","inline-block")
-
-				},1200);
-			}
-		});
-		
-	}
-
+    }
 	
 	that.bindChooseButton = function() {
 		
@@ -115,6 +96,7 @@ function Controller() {
                    console.log(selectedSVG)
                    that.addSingleImage(selectedSVG)
 				   that.addMultipleImages(svgInner)
+				   that.bindShirtButton();
 
 
 					$('#back').click(function() {
@@ -128,16 +110,44 @@ function Controller() {
 		
 	}
 	
-	
+
+	that.bindShirtButton = function(){
+
+
+
+	    $(".shirt-wrapper").click( function() {
+
+            $(".shirt-wrapper").off();
+            $(".shirt-type").css({"color":"black"});
+
+	        var id =  $(this).attr("id");
+
+	        if (id == "single") {
+
+	            $("#multi").empty().append("<p style ='height:200px'>.</p>");
+
+	        } else {
+
+	            $("#single").empty().insertAfter("#multi").append("<p style ='height:200px'>.</p>");
+
+
+	        }
+
+	        console.log(id)
+
+	    })
+
+
+	}
 
 
 	that.addSingleImage = function(svg) {
 
 		
-        var styles = {"position": "absolute", "width": "4em", "height": "4em", "top":"0px", "left":"0px", "fill":"black important", "z-index":"10000"};
+        var styles = {"position": "absolute", "width": "3em", "height": "3em", "top":"0px", "left":"0px", "fill":"black important", "z-index":"10000"};
 	    $('#single').append('<div id="singleShirt"></div>');
 	    
-		$('#singleShirt').css({"position": "absolute", "width": "75px", "height": "75px", "top":"100px", "left":"200px"}).append(svg);
+		$('#singleShirt').css({"position": "absolute", "width": "75px", "height": "75px", "top":"75px", "left":"160px"}).append(svg);
 	        
 			
 
@@ -157,11 +167,10 @@ function Controller() {
 	
 	that.addMultipleImages = function(svg) {
 
-		console.log(svg)
 
 		var svgoutside = '<svg class="svg-icon" viewBox="0 0 20 20"></svg>'
 
-        var styles = {"position": "absolute", "width": "1em", "height": "1em", "top":"0px", "left":"0px", "fill":"black important", "z-index":"10000"};
+        var styles = {"position": "absolute", "width": "0.8em", "height": "0.8em", "top":"0px", "left":"0px", "fill":"black important", "z-index":"10000"};
 
 	    
 		var gridheight = 8
@@ -177,8 +186,8 @@ function Controller() {
 				
 				var id = "multiShirt" + i.toString() + "_" + j.toString();
 				var svgId = "svg" + id
-				var tops = (5 + 40*i).toString() +"px"
-				var lefts = (20 + 35*j).toString() +"px"
+				var tops = (2 + 32*i).toString() +"px"
+				var lefts = (20 + 27*j).toString() +"px"
 				
 				$('#multi').append('<div id="' + id + '"></div>');
 				$('#' + id ).css({"position": "absolute", "width": "15px", "height": "15px", "top": tops, "left": lefts});
@@ -206,6 +215,33 @@ function Controller() {
 	that.getLoader = function(string) {
 		$("#image-section").empty().append('<div class="loader"></div>', '<div id="loader-text">' + string + '</br> (Fancy Animation)</div>' );
 	}
+
+
+    that.loadImage = function() {
+
+        if (that.isLoading == false) {
+
+                    that.getLoader("Generating Image");
+
+                    $(".selector-image").css("display","none")
+                    that.startLoading();
+
+                    setTimeout(function() {
+
+                        var styles = {"width": "23.5em", "height": "23.5em", "margin-left":"0px", "margin-top":"0px"};
+
+
+                        $("#image-section").empty().append(that.selectedImageSVG);
+                        $("#image-section").find(".svg-icon").css(styles);
+                        that.stopLoading();
+
+
+                        $(".selector-image").css("display","inline-block")
+
+                    },1200);
+                }
+
+    };
 
 
 	
