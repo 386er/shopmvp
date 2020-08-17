@@ -113,6 +113,7 @@ function Controller() {
 
 	that.bindShirtButton = function(){
 
+        var sizeStyle = { "width": "30px", "height": "30px", "border":"1px solid red", "float": "left", "margin":"20px", "text-align":"center"};
 
 
 	    $(".shirt-wrapper").click( function() {
@@ -124,12 +125,17 @@ function Controller() {
 
 	        if (id == "single") {
 
-	            $("#multi").empty().append("<p style ='height:200px'>.</p>");
+
+	            $("#multi").empty().append('<div class="size-select">S</div><div class="size-select">M</div><div class="size-select">L</div><div class="size-select">XL</div>');
+                 $("#multi").append('<p>.</p>')
+
+                $(".size-select").css(sizeStyle);
 
 	        } else {
 
-	            $("#single").empty().insertAfter("#multi").append("<p style ='height:200px'>.</p>");
+	            $("#single").empty().insertAfter("#multi").append('<div class="size-select">S</div><div class="size-select">M</div><div class="size-select">L</div><div class="size-select">XL</div>');
 
+                 $(".size-select").css(sizeStyle);
 
 	        }
 
